@@ -9,6 +9,11 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
+.idea/**
+.gradle/**
+gradle/
+.gradle/
+.idea/
 
 /src/main/resources/static/
 
