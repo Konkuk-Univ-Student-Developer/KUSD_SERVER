@@ -1,0 +1,9 @@
+spring:
+  config:
+    activate:
+      on-profile: "datasource"
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${DB_NAME}
+    password: ${POSTGRES_PASSWORD}
+    username: ${POSTGRES_USERNAME}
