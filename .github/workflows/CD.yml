@@ -21,6 +21,7 @@ jobs:
             git merge origin/master
             
             ./gradlew clean build
+            source load-env.sh
             cd build
             cd libs
             java -jar KUmap-0.0.1-SNAPSHOT.jar
