@@ -1,8 +1,10 @@
 package com.kusd.KUmap.domain.field.controller;
 
 import com.kusd.KUmap.domain.field.dto.request.MiddleFieldGetRequest;
+import com.kusd.KUmap.domain.field.dto.request.SmallFieldGetRequest;
 import com.kusd.KUmap.domain.field.dto.response.LargeFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.MiddleFieldGetResponse;
+import com.kusd.KUmap.domain.field.dto.response.SmallFieldGetResponse;
 import com.kusd.KUmap.domain.field.service.FieldService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +32,12 @@ public class FieldController {
         @RequestBody MiddleFieldGetRequest request
     ) {
         return ResponseEntity.ok(fieldService.getMiddleFieldList(request));
+    }
+
+    @PostMapping("/small")
+    public ResponseEntity<List<SmallFieldGetResponse>> getLargeFieldResponse(
+        @RequestBody SmallFieldGetRequest request
+    ) {
+        return ResponseEntity.ok(fieldService.getSmallFieldList(request));
     }
 }

@@ -1,8 +1,10 @@
 package com.kusd.KUmap.domain.field.service;
 
 import com.kusd.KUmap.domain.field.dto.request.MiddleFieldGetRequest;
+import com.kusd.KUmap.domain.field.dto.request.SmallFieldGetRequest;
 import com.kusd.KUmap.domain.field.dto.response.LargeFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.MiddleFieldGetResponse;
+import com.kusd.KUmap.domain.field.dto.response.SmallFieldGetResponse;
 import com.kusd.KUmap.domain.field.repository.FieldRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +28,11 @@ public class FieldService {
             .toList();
     }
 
-    void getSmallFieldList() {
-
+    public List<SmallFieldGetResponse> getSmallFieldList(SmallFieldGetRequest request) {
+        return fieldRepository.findAllByLargeFieldAndMiddleFieldAndSmallFieldAndDetailField(request.largeField(),
+                request.middleField()).stream()
+            .map(SmallFieldGetResponse::from)
+            .toList();
     }
 
     void getDetailFieldList() {
