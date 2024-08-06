@@ -14,10 +14,13 @@ jobs:
           username: ${{ secrets.SERVER_USERNAME }}
           key: ${{ secrets.SERVER_KEY }}
           script: |
-            cd ~/kusd
+            cd ~/KUSD_SERVER
             git add .
             git commit -m "temp commit"
             git fetch origin master
             git merge origin/master
             
             ./gradlew clean build
+            cd build
+            cd libs
+            java -jar KUmap-0.0.1-SNAPSHOT.jar
