@@ -16,7 +16,7 @@ public class Field {
 
     @Id
     @Column(name = "FIELD_CD")
-    private String FieldCode;
+    private String fieldCode;
 
     @Column(name = "NO")
     private int number;
