@@ -9,6 +9,7 @@ import com.kusd.KUmap.domain.field.dto.response.MiddleFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.SmallFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.SubjectResponse;
 import com.kusd.KUmap.domain.field.service.FieldService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.websocket.server.PathParam;
 import java.util.List;
 import java.util.Set;
@@ -29,11 +30,13 @@ public class FieldController {
     private final FieldService fieldService;
 
     @GetMapping("/large")
+    @Operation(summary = "진출 분야 대분류 조회하기")
     public ResponseEntity<List<LargeFieldGetResponse>> getLargeFieldResponse() {
         return ResponseEntity.ok(fieldService.getLargeFieldList());
     }
 
     @PostMapping("/middle")
+    @Operation(summary = "진출 분야 특정 대분류에 속하는 중분류 조회하기")
     public ResponseEntity<List<MiddleFieldGetResponse>> getMiddleFieldResponse(
         @RequestBody MiddleFieldGetRequest request
     ) {
@@ -41,6 +44,7 @@ public class FieldController {
     }
 
     @PostMapping("/small")
+    @Operation(summary = "진출 분야 특정 중분류에 속하는 소분류 조회하기")
     public ResponseEntity<List<SmallFieldGetResponse>> getSmallFieldResponse(
         @RequestBody SmallFieldGetRequest request
     ) {
@@ -48,6 +52,7 @@ public class FieldController {
     }
 
     @PostMapping("/detail")
+    @Operation(summary = "진출 분야 특정 소분류에 속하는 세분류 조회하기")
     public ResponseEntity<List<DetailFieldGetResponse>> getDetailFieldResponse(
         @RequestBody DetailFieldGetRequest request
     ) {
@@ -55,6 +60,7 @@ public class FieldController {
     }
 
     @GetMapping("/{fields-code}/subjects")
+    @Operation(summary = "진출 분야로 갈 수 있는 전공 조회하기")
     public ResponseEntity<Set<SubjectResponse>> getSubjectsByFieldCode(
         @PathVariable("fields-code") String fieldCode
     ) {

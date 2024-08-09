@@ -1,10 +1,9 @@
 package com.kusd.KUmap.domain.field.service;
 
 import com.kusd.KUmap.domain.competency.entity.Competency;
-import com.kusd.KUmap.domain.competency.entity.CompetencyField;
-import com.kusd.KUmap.domain.competency.repository.CompetencyFieldRepository;
+import com.kusd.KUmap.domain.competency.service.CompetencyService;
 import com.kusd.KUmap.domain.course.entity.CourseDetails;
-import com.kusd.KUmap.domain.course.service.CourseDetailService;
+import com.kusd.KUmap.domain.course.repository.CourseDetailsRepository;
 import com.kusd.KUmap.domain.field.dto.request.DetailFieldGetRequest;
 import com.kusd.KUmap.domain.field.dto.request.MiddleFieldGetRequest;
 import com.kusd.KUmap.domain.field.dto.request.SmallFieldGetRequest;
@@ -28,8 +27,9 @@ import org.springframework.stereotype.Service;
 public class FieldService {
 
     private final FieldRepository fieldRepository;
-    private final CompetencyFieldRepository competencyFieldRepository;
-    private final CourseDetailService courseDetailService;
+    private final CompetencyService competencyService;
+    private final CourseDetailsRepository courseDetailsRepository;
+
 
     public List<LargeFieldGetResponse> getLargeFieldList() {
         return fieldRepository.findAllByFieldCode().stream()
@@ -59,21 +59,25 @@ public class FieldService {
 
     public Set<SubjectResponse> getSubjectListByField(String fieldCode) {
 
-        Field field = fieldRepository.findByFieldCode(fieldCode)
-            .orElseThrow(() -> new NotFoundException(ErrorCode.FIELD_NOT_FOUND));
+        findFieldByFieldCode(fieldCode);
 
-        List<CompetencyField> competencyFieldList = competencyFieldRepository.findAllByField(field);
-
-        List<Competency> competencyList = competencyFieldList.stream()
-            .map(CompetencyField::getCompetency)
-            .toList();
+        List<Competency> competencyList = competencyService.getCompetencyListByFieldCode(fieldCode);
 
         List<CourseDetails> courseDetailsList = competencyList.stream()
-            .flatMap(competency -> courseDetailService.getCourseListByCompetencyCode(competency.getCompetencyCode()).stream())
+            .flatMap(competency -> getCourseListByCompetencyCode(competency.getCompetencyCode()).stream())
             .toList();
 
         return courseDetailsList.stream()
             .map(courseDetails -> SubjectResponse.of(courseDetails.getOpeningSubjectName(), courseDetails.getOpeningSubjectCode()))
             .collect(Collectors.toSet());
+    }
+
+    private List<CourseDetails> getCourseListByCompetencyCode(String cmptCode) {
+        return courseDetailsRepository.findAllByCompetencyCode(cmptCode);
+    }
+
+    public Field findFieldByFieldCode(String fieldCode) {
+        return fieldRepository.findByFieldCode(fieldCode)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.FIELD_NOT_FOUND));
     }
 }
