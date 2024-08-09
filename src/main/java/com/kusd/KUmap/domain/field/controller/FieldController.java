@@ -7,6 +7,7 @@ import com.kusd.KUmap.domain.field.dto.response.DetailFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.LargeFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.MiddleFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.SmallFieldGetResponse;
+import com.kusd.KUmap.domain.field.dto.response.SubjectResponse;
 import com.kusd.KUmap.domain.field.service.FieldService;
 import jakarta.websocket.server.PathParam;
 import java.util.List;
@@ -54,7 +55,7 @@ public class FieldController {
     }
 
     @GetMapping("/{fields-code}/subjects")
-    public ResponseEntity<Set<String>> getSubjectsByFieldCode(
+    public ResponseEntity<Set<SubjectResponse>> getSubjectsByFieldCode(
         @PathVariable("fields-code") String fieldCode
     ) {
         return ResponseEntity.ok(fieldService.getSubjectListByField(fieldCode));

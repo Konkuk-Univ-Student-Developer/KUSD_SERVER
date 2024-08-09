@@ -12,6 +12,7 @@ import com.kusd.KUmap.domain.field.dto.response.DetailFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.LargeFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.MiddleFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.SmallFieldGetResponse;
+import com.kusd.KUmap.domain.field.dto.response.SubjectResponse;
 import com.kusd.KUmap.domain.field.entity.Field;
 import com.kusd.KUmap.domain.field.repository.FieldRepository;
 import com.kusd.KUmap.global.error.exception.ErrorCode;
@@ -56,7 +57,7 @@ public class FieldService {
             .toList();
     }
 
-    public Set<String> getSubjectListByField(String fieldCode) {
+    public Set<SubjectResponse> getSubjectListByField(String fieldCode) {
 
         Field field = fieldRepository.findByFieldCode(fieldCode)
             .orElseThrow(() -> new NotFoundException(ErrorCode.FIELD_NOT_FOUND));
@@ -72,7 +73,7 @@ public class FieldService {
             .toList();
 
         return courseDetailsList.stream()
-            .map(CourseDetails::getOpeningSubjectName)
+            .map(courseDetails -> SubjectResponse.of(courseDetails.getOpeningSubjectName(), courseDetails.getOpeningSubjectCode()))
             .collect(Collectors.toSet());
     }
 }
