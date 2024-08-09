@@ -2,6 +2,7 @@ package com.kusd.KUmap.domain.field.service;
 
 import com.kusd.KUmap.domain.competency.entity.Competency;
 import com.kusd.KUmap.domain.competency.service.CompetencyService;
+import com.kusd.KUmap.domain.course.entity.AddInformation;
 import com.kusd.KUmap.domain.course.entity.CourseDetails;
 import com.kusd.KUmap.domain.course.repository.CourseDetailsRepository;
 import com.kusd.KUmap.domain.field.dto.request.DetailFieldGetRequest;
@@ -68,7 +69,11 @@ public class FieldService {
             .toList();
 
         return courseDetailsList.stream()
-            .map(courseDetails -> SubjectResponse.of(courseDetails.getOpeningSubjectName(), courseDetails.getOpeningSubjectCode()))
+            .map(courseDetails -> {
+                AddInformation addInformation = courseDetails.getAddInformation();
+                return SubjectResponse.of(addInformation.getOpeningSubjectName(),
+                    addInformation.getOpeningSubjectCode());
+            })
             .collect(Collectors.toSet());
     }
 

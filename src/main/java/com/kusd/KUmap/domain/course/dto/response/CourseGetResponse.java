@@ -1,5 +1,6 @@
 package com.kusd.KUmap.domain.course.dto.response;
 
+import com.kusd.KUmap.domain.course.entity.AddInformation;
 import com.kusd.KUmap.domain.course.entity.CourseDetails;
 import lombok.Builder;
 
@@ -7,16 +8,18 @@ import lombok.Builder;
 public record CourseGetResponse(
     String haksuId,
     String name,
-    String openingYear,
+    Integer openingYear,
     String openingSemester
 ) {
 
     public static CourseGetResponse from(CourseDetails courseDetails) {
+        AddInformation addInformation = courseDetails.getAddInformation();
+
         return CourseGetResponse.builder()
             .haksuId(courseDetails.getHaksuId())
             .name(courseDetails.getTypicalKoreanName())
-            .openingYear(courseDetails.getOpeningSchoolYear())
-            .openingSemester(courseDetails.getOpeningSemesterTerm())
+            .openingYear(addInformation.getOpeningSchoolYear())
+            .openingSemester(addInformation.getOpeningSemesterTerm())
             .build();
     }
 

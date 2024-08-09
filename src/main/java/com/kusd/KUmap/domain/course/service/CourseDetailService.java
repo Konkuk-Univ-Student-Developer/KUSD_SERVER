@@ -4,12 +4,16 @@ import com.kusd.KUmap.domain.competency.entity.Competency;
 import com.kusd.KUmap.domain.competency.service.CompetencyService;
 import com.kusd.KUmap.domain.course.dto.response.CourseCompetencyResponse;
 import com.kusd.KUmap.domain.course.dto.response.CourseCompetencySubjectResponse;
+import com.kusd.KUmap.domain.course.dto.response.CourseGetDetailsResponse;
 import com.kusd.KUmap.domain.course.dto.response.CourseGetResponse;
 import com.kusd.KUmap.domain.course.dto.response.CourseSubjectGetResponse;
+import com.kusd.KUmap.domain.course.entity.CompetencyInCourse;
 import com.kusd.KUmap.domain.course.entity.CourseDetails;
 import com.kusd.KUmap.domain.course.repository.CourseDetailsRepository;
 import com.kusd.KUmap.domain.field.entity.Field;
 import com.kusd.KUmap.domain.field.service.FieldService;
+import com.kusd.KUmap.global.error.exception.ErrorCode;
+import com.kusd.KUmap.global.error.exception.NotFoundException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -69,9 +73,11 @@ public class CourseDetailService {
         List<CourseDetails> courseDetailsList = courseDetailsRepository.findAllByOpeningSubjectCode(subjectCode);
         Set<String> competencyNameListBySubject = new HashSet<>();
         courseDetailsList.forEach(course -> {
-            addIfNotNull(competencyNameListBySubject, course.getCompetencyCode1());
-            addIfNotNull(competencyNameListBySubject, course.getCompetencyCode2());
-            addIfNotNull(competencyNameListBySubject, course.getCompetencyCode3());
+            CompetencyInCourse competencyInCourse = course.getCompetencyInCourse();
+
+            addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode1());
+            addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode2());
+            addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode3());
         });
 
         List<Competency> commonCmptList = competencyListByField.stream()
@@ -86,9 +92,10 @@ public class CourseDetailService {
             ));
 
         for (CourseDetails courseDetails : courseDetailsList) {
-            String cmpt1 = courseDetails.getCompetencyCode1();
-            String cmpt2 = courseDetails.getCompetencyCode2();
-            String cmpt3 = courseDetails.getCompetencyCode3();
+            CompetencyInCourse competencyInCourse = courseDetails.getCompetencyInCourse();
+            String cmpt1 = competencyInCourse.getCompetencyCode1();
+            String cmpt2 = competencyInCourse.getCompetencyCode2();
+            String cmpt3 = competencyInCourse.getCompetencyCode3();
 
             for (Competency competency : commonCmptList) {
                 String cmpt = competency.getCompetencyCode();
@@ -122,7 +129,10 @@ public class CourseDetailService {
         }
     }
 
-    public void getCourseDetails(String haksuId) {
+    public CourseGetDetailsResponse getCourseDetails(String haksuId) {
+        CourseDetails courseDetails = courseDetailsRepository.findByHaksuId(haksuId)
+            .orElseThrow(() -> new NotFoundException(ErrorCode.Course_NOT_FOUND));
 
+        return CourseGetDetailsResponse.from(courseDetails);
     }
 }

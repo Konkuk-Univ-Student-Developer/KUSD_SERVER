@@ -2,6 +2,7 @@ package com.kusd.KUmap.domain.course.controller;
 
 import com.kusd.KUmap.domain.course.dto.response.CourseCompetencyResponse;
 import com.kusd.KUmap.domain.course.dto.response.CourseCompetencySubjectResponse;
+import com.kusd.KUmap.domain.course.dto.response.CourseGetDetailsResponse;
 import com.kusd.KUmap.domain.course.dto.response.CourseGetResponse;
 import com.kusd.KUmap.domain.course.service.CourseDetailService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,5 +44,13 @@ public class CourseDetailsController {
         @PathVariable("field-code") String fieldCode
     ) {
         return ResponseEntity.ok(courseDetailService.getCourseListBySubjectAndField(subjectCode, fieldCode));
+    }
+
+    @GetMapping("/{haksuId}/details")
+    @Operation(summary = "강좌 상세정보 조회")
+    public ResponseEntity<CourseGetDetailsResponse> getCourseDetails(
+        @PathVariable("haksuId") String haksuId
+    ) {
+        return ResponseEntity.ok(courseDetailService.getCourseDetails(haksuId));
     }
 }
