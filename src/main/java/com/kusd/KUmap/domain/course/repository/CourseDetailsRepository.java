@@ -11,4 +11,6 @@ public interface CourseDetailsRepository extends JpaRepository<CourseDetails, St
     @Query("SELECT c FROM CourseDetails c WHERE c.competencyCode1 = :cmptCode OR c.competencyCode2 = :cmptCode OR c"
         + ".competencyCode3 = :cmptCode ")
     List<CourseDetails> findAllByCompetencyCode(@Param("cmptCode") String cmptCode);
+
+    List<CourseDetails> findAllByOpeningSubjectCode(String openingSubjectCode);
 }
