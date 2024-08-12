@@ -45,11 +45,16 @@ public class CourseDetailService {
         // 진출분야의 전공역량
         List<Competency> competencyListByField = competencyService.getCompetencyListByFieldCode(fieldCode);
 
+        // 중복된 키가 발생할 경우 기존 리스트에 새 리스트를 추가하여 병합
         Map<String, List<CourseDetails>> resultMap = competencyListByField.stream()
             .map(Competency::getCompetencyCode)
             .collect(Collectors.toMap(
                 code -> code,
-                courseDetailsRepository::findAllByCompetencyCode
+                courseDetailsRepository::findAllByCompetencyCode,
+                (existing, replacement) -> {
+                    existing.addAll(replacement); // 기존 리스트에 새로운 리스트를 추가
+                    return existing;
+                }
             ));
 
         List<CourseCompetencySubjectResponse> responseList = new ArrayList<>();
