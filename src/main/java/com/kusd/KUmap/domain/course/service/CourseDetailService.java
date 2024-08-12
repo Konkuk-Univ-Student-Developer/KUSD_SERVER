@@ -80,9 +80,11 @@ public class CourseDetailService {
         courseDetailsList.forEach(course -> {
             CompetencyInCourse competencyInCourse = course.getCompetencyInCourse();
 
-            addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode1());
-            addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode2());
-            addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode3());
+            if (competencyInCourse != null) {
+                addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode1());
+                addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode2());
+                addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode3());
+            }
         });
 
         List<Competency> commonCmptList = competencyListByField.stream()
@@ -98,6 +100,9 @@ public class CourseDetailService {
 
         for (CourseDetails courseDetails : courseDetailsList) {
             CompetencyInCourse competencyInCourse = courseDetails.getCompetencyInCourse();
+            if (competencyInCourse == null) {
+                continue;  // competencyInCourse가 null이면 다음 항목으로 넘어감
+            }
             String cmpt1 = competencyInCourse.getCompetencyCode1();
             String cmpt2 = competencyInCourse.getCompetencyCode2();
             String cmpt3 = competencyInCourse.getCompetencyCode3();
