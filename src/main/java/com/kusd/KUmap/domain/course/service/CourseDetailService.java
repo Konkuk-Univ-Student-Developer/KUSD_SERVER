@@ -18,8 +18,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -75,63 +77,84 @@ public class CourseDetailService {
         List<Competency> competencyListByField = competencyService.getCompetencyListByFieldCode(fieldCode);
 
         // 학과의 전공역량
-        List<CourseDetails> courseDetailsList = courseDetailsRepository.findAllByOpeningSubjectCode(subjectCode);
-        Set<String> competencyNameListBySubject = new HashSet<>();
-        courseDetailsList.forEach(course -> {
-            CompetencyInCourse competencyInCourse = course.getCompetencyInCourse();
+        Set<String> competencyNameListBySubject = extractCompetencyNamesFromCourses(subjectCode);
 
-            if (competencyInCourse != null) {
-                addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode1());
-                addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode2());
-                addIfNotNull(competencyNameListBySubject, competencyInCourse.getCompetencyCode3());
-            }
-        });
+        // 공통 전공역량 필터링
+        List<Competency> commonCmptList = filterCommonCompetencies(competencyListByField, competencyNameListBySubject);
 
-        List<Competency> commonCmptList = competencyListByField.stream()
+        // 결과 매핑
+        Map<String, List<CourseDetails>> resultMap = mapCoursesByCompetencyCode(courseDetailsRepository.findAllByOpeningSubjectCode(subjectCode), commonCmptList);
+
+        // 응답 생성
+        return createResponseList(resultMap);
+    }
+
+    private Set<String> extractCompetencyNamesFromCourses(String subjectCode) {
+        return courseDetailsRepository.findAllByOpeningSubjectCode(subjectCode).stream()
+            .map(CourseDetails::getCompetencyInCourse)
+            .filter(Objects::nonNull)
+            .flatMap(competencyInCourse -> Stream.of(
+                competencyInCourse.getCompetencyCode1(),
+                competencyInCourse.getCompetencyCode2(),
+                competencyInCourse.getCompetencyCode3()
+            ))
+            .filter(Objects::nonNull)
+            .collect(Collectors.toSet());
+    }
+
+    private List<Competency> filterCommonCompetencies(List<Competency> competencyListByField, Set<String> competencyNameListBySubject) {
+        return competencyListByField.stream()
             .filter(competency -> competencyNameListBySubject.contains(competency.getCompetencyCode()))
-            .toList();
+            .collect(Collectors.toList());
+    }
 
+    private Map<String, List<CourseDetails>> mapCoursesByCompetencyCode(List<CourseDetails> courseDetailsList, List<Competency> commonCmptList) {
         Map<String, List<CourseDetails>> resultMap = commonCmptList.stream()
             .map(Competency::getCompetencyCode)
             .collect(Collectors.toMap(
                 code -> code,
-                code -> new ArrayList<>()
+                code -> new ArrayList<>(),
+                (existing, replacement) -> {
+                    existing.addAll(replacement);
+                    return existing;
+                }
             ));
 
-        for (CourseDetails courseDetails : courseDetailsList) {
+        courseDetailsList.forEach(courseDetails -> {
             CompetencyInCourse competencyInCourse = courseDetails.getCompetencyInCourse();
-            if (competencyInCourse == null) {
-                continue;  // competencyInCourse가 null이면 다음 항목으로 넘어감
+            if (competencyInCourse != null) {
+                addCourseToResultMap(resultMap, competencyInCourse, courseDetails);
             }
-            String cmpt1 = competencyInCourse.getCompetencyCode1();
-            String cmpt2 = competencyInCourse.getCompetencyCode2();
-            String cmpt3 = competencyInCourse.getCompetencyCode3();
+        });
 
-            for (Competency competency : commonCmptList) {
-                String cmpt = competency.getCompetencyCode();
-                if(cmpt.equals(cmpt1)) {
-                    resultMap.get(cmpt).add(courseDetails);
-                }
-                if(cmpt.equals(cmpt2)){
-                    resultMap.get(cmpt).add(courseDetails);
-                }
-                if(cmpt.equals(cmpt3)){
-                    resultMap.get(cmpt).add(courseDetails);
-                }
-            }
-        }
+        return resultMap;
+    }
 
-        List<CourseCompetencyResponse> responseList = new ArrayList<>();
-        for (String cmptCode : resultMap.keySet()) {
-            Competency competency = competencyService.getCompetencyByCmptCode(cmptCode);
-            CourseCompetencyResponse from = CourseCompetencyResponse.from(competency);
-            from.addCourseGetResponseList(resultMap.get(cmptCode).stream()
-                .map(CourseGetResponse::from)
-                .toList());
-            responseList.add(from);
-        }
+    private void addCourseToResultMap(Map<String, List<CourseDetails>> resultMap, CompetencyInCourse competencyInCourse, CourseDetails courseDetails) {
+        Stream.of(
+                competencyInCourse.getCompetencyCode1(),
+                competencyInCourse.getCompetencyCode2(),
+                competencyInCourse.getCompetencyCode3()
+            ).filter(Objects::nonNull)
+            .forEach(code -> {
+                List<CourseDetails> courses = resultMap.get(code);
+                if (courses != null) {
+                    courses.add(courseDetails);
+                }
+            });
+    }
 
-        return responseList;
+    private List<CourseCompetencyResponse> createResponseList(Map<String, List<CourseDetails>> resultMap) {
+        return resultMap.entrySet().stream()
+            .map(entry -> {
+                Competency competency = competencyService.getCompetencyByCmptCode(entry.getKey());
+                CourseCompetencyResponse response = CourseCompetencyResponse.from(competency);
+                response.addCourseGetResponseList(entry.getValue().stream()
+                    .map(CourseGetResponse::from)
+                    .collect(Collectors.toList()));
+                return response;
+            })
+            .collect(Collectors.toList());
     }
     private void addIfNotNull(Set<String> set, String competencyCode) {
         if (competencyCode != null) {
