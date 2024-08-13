@@ -6,8 +6,16 @@ spring:
       local: "local, datasource"
       dev: "dev, datasource"
     include:
+  mvc:
+    throw-exception-if-no-handler-found: true
+  web:
+    resources:
+      add-mappings: false
 
 logging:
   level:
     root: INFO  # 모든 로그에 대한 기본 로그 레벨 설정
     org.springframework.security: TRACE
+
+
+
