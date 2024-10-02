@@ -58,6 +58,7 @@ public class CourseDetailService {
                     return existing;
                 }
             ));
+        resultMap.entrySet().removeIf(entry -> entry.getValue().isEmpty()); // 비어 있는 전공역량 지움
 
         List<CourseCompetencySubjectResponse> responseList = new ArrayList<>();
         for (String cmptCode : resultMap.keySet()) {
