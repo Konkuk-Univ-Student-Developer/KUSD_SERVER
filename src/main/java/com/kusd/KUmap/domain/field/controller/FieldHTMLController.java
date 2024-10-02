@@ -22,10 +22,10 @@ public class FieldHTMLController {
         String url = "http://203.252.168.41:8080/api/v1/fields/all";
 
         // API에서 데이터 가져오기
-        String[] fields = fieldService.getAllFieldList().toArray(new String[0]);
+        List<String> allFieldList = fieldService.getAllFieldList();
 
         // 데이터를 모델에 추가
-        model.addAttribute("fields", fields);
+        model.addAttribute("fields", allFieldList);
         return "fieldSearch";
     }
 }
