@@ -10,7 +10,6 @@ import com.kusd.KUmap.domain.field.dto.response.SmallFieldGetResponse;
 import com.kusd.KUmap.domain.field.dto.response.SubjectResponse;
 import com.kusd.KUmap.domain.field.service.FieldService;
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.websocket.server.PathParam;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +27,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class FieldController {
 
     private final FieldService fieldService;
+
+    @GetMapping("/all")
+    @Operation(summary = "진출 분야 검색용으로 전부 조회하기")
+    public ResponseEntity<List<String>> getAllFieldResponse() {
+        return ResponseEntity.ok(fieldService.getAllFieldList());
+    }
 
     @GetMapping("/large")
     @Operation(summary = "진출 분야 대분류 조회하기")

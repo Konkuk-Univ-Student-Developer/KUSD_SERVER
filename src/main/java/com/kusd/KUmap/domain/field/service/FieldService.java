@@ -1,5 +1,6 @@
 package com.kusd.KUmap.domain.field.service;
 
+
 import com.kusd.KUmap.domain.competency.entity.Competency;
 import com.kusd.KUmap.domain.competency.service.CompetencyService;
 import com.kusd.KUmap.domain.course.entity.AddInformation;
@@ -18,6 +19,7 @@ import com.kusd.KUmap.domain.field.repository.FieldRepository;
 import com.kusd.KUmap.global.error.exception.ErrorCode;
 import com.kusd.KUmap.global.error.exception.NotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +33,24 @@ public class FieldService {
     private final CompetencyService competencyService;
     private final CourseDetailsRepository courseDetailsRepository;
 
+    public List<String> getAllFieldList() {
+        return fieldRepository.findAll().stream()
+            .map(field -> {
+            // 예상되는 문자열 크기에 맞춰 초기 용량 설정 (예: 64)
+            StringBuilder fieldStringBuilder = new StringBuilder(field.getLargeField().length() + 64);
+            fieldStringBuilder.append(field.getLargeField());
+
+            Optional.ofNullable(field.getMiddleField())
+                .ifPresent(middle -> fieldStringBuilder.append(" > ").append(middle));
+            Optional.ofNullable(field.getSmallField())
+                .ifPresent(small -> fieldStringBuilder.append(" > ").append(small));
+            Optional.ofNullable(field.getDetailField())
+                .ifPresent(detail -> fieldStringBuilder.append(" > ").append(detail));
+
+            return fieldStringBuilder.toString();
+        })
+            .toList();
+    }
 
     public List<LargeFieldGetResponse> getLargeFieldList() {
         return fieldRepository.findAllByFieldCode().stream()
