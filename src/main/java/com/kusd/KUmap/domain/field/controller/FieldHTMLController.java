@@ -11,7 +11,7 @@ public class FieldHTMLController {
     @GetMapping("/search")
     public String getFields(Model model) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = "http://localhost:8080/api/v1/fields/all";
+        String url = "http://203.252.168.41:8080/api/v1/fields/all";
 
         // API에서 데이터 가져오기
         ResponseEntity<String[]> response = restTemplate.getForEntity(url, String[].class);
