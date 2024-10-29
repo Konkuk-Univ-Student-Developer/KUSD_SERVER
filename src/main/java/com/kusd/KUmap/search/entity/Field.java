@@ -1,4 +1,4 @@
-package com.kusd.KUmap.domain.field.entity;
+package com.kusd.KUmap.search.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,4 +32,26 @@ public class Field {
 
     @Column(name = "DETAILFIELD")
     private String detailField;
+
+    public boolean hasMiddleField() {
+        return middleField != null;
+    }
+
+    public boolean hasSmallField() {
+        return smallField != null;
+    }
+
+    public boolean hasDetailField() {
+        return detailField != null;
+    }
+
+    public String getFieldSearchFormat() {
+        if (middleField == null) return "";
+
+        if (smallField == null) return middleField;
+
+        if (detailField == null) return middleField + " > " + smallField;
+
+        return middleField + " > " + smallField + " > " + detailField;
+    }
 }

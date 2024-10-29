@@ -1,6 +1,6 @@
 package com.kusd.KUmap.domain.competency.entity;
 
-import com.kusd.KUmap.domain.field.entity.Field;
+import com.kusd.KUmap.search.entity.Field;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

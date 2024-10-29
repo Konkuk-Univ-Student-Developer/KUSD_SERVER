@@ -10,12 +10,9 @@ import com.kusd.KUmap.domain.course.dto.response.CourseSubjectGetResponse;
 import com.kusd.KUmap.domain.course.entity.CompetencyInCourse;
 import com.kusd.KUmap.domain.course.entity.CourseDetails;
 import com.kusd.KUmap.domain.course.repository.CourseDetailsRepository;
-import com.kusd.KUmap.domain.field.entity.Field;
-import com.kusd.KUmap.domain.field.service.FieldService;
 import com.kusd.KUmap.global.error.exception.ErrorCode;
 import com.kusd.KUmap.global.error.exception.NotFoundException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -30,7 +27,6 @@ import org.springframework.stereotype.Service;
 public class CourseDetailService {
 
     private final CourseDetailsRepository courseDetailsRepository;
-    private final FieldService fieldService;
     private final CompetencyService competencyService;
 
     public List<CourseDetails> getCourseListByCompetencyCode(String cmptCode) {
