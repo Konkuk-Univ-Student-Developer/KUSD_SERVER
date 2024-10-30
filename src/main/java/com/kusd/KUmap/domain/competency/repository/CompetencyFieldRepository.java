@@ -1,7 +1,7 @@
 package com.kusd.KUmap.domain.competency.repository;
 
 import com.kusd.KUmap.domain.competency.entity.CompetencyField;
-import com.kusd.KUmap.search.entity.Field;
+import com.kusd.KUmap.domain.search.domain.Field;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

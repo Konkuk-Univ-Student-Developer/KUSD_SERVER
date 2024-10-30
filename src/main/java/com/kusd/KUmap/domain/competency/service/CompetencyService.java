@@ -4,8 +4,8 @@ import com.kusd.KUmap.domain.competency.entity.Competency;
 import com.kusd.KUmap.domain.competency.entity.CompetencyField;
 import com.kusd.KUmap.domain.competency.repository.CompetencyFieldRepository;
 import com.kusd.KUmap.domain.competency.repository.CompetencyRepository;
-import com.kusd.KUmap.search.entity.Field;
-import com.kusd.KUmap.search.repository.FieldRepository;
+import com.kusd.KUmap.domain.search.domain.Field;
+import com.kusd.KUmap.domain.search.repository.FieldSearchV2Repository;
 import com.kusd.KUmap.global.error.exception.ErrorCode;
 import com.kusd.KUmap.global.error.exception.NotFoundException;
 import java.util.List;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CompetencyService {
 
-    private final FieldRepository fieldRepository;
+    private final FieldSearchV2Repository fieldSearchV2Repository;
 
     private final CompetencyFieldRepository competencyFieldRepository;
     private final CompetencyRepository competencyRepository;
@@ -36,7 +36,7 @@ public class CompetencyService {
     }
 
     private Field findFieldByFieldCode(String fieldCode) {
-        return fieldRepository.findByFieldCode(fieldCode)
+        return fieldSearchV2Repository.findByFieldCode(fieldCode)
             .orElseThrow(() -> new NotFoundException(ErrorCode.FIELD_NOT_FOUND));
     }
 }
