@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/api/v1/field")
+@RequestMapping("/api/v1/fields")
 @RequiredArgsConstructor
 @Deprecated
 public class FieldSearchV1Controller {
