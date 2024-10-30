@@ -2,6 +2,7 @@ package com.kusd.KUmap.domain.search.dto.fieldSearch.v1.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Deprecated
 public record DetailFieldGetRequest(
     @Schema(example = "01010100")
     String smallFieldCode,

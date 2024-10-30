@@ -2,6 +2,7 @@ package com.kusd.KUmap.domain.search.dto.fieldSearch.v1.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
+@Deprecated
 public record MiddleFieldGetRequest(
     @Schema(example = "01000000")
     String largeFieldCode,

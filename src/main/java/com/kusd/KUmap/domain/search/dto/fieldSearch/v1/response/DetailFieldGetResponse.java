@@ -3,6 +3,7 @@ package com.kusd.KUmap.domain.search.dto.fieldSearch.v1.response;
 import com.kusd.KUmap.domain.search.domain.Field;
 import lombok.Builder;
 
+@Deprecated
 @Builder
 public record DetailFieldGetResponse(
     String fieldCode,
