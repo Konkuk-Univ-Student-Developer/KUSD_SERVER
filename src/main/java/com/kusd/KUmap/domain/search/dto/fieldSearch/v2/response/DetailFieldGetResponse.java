@@ -6,7 +6,6 @@ import lombok.Builder;
 @Builder
 public record DetailFieldGetResponse(
     String fieldCode,
-    String largeField,
     String middleField,
     String smallField,
     String detailField
@@ -14,7 +13,6 @@ public record DetailFieldGetResponse(
     public static DetailFieldGetResponse from(Field field) {
         return DetailFieldGetResponse.builder()
             .fieldCode(field.getFieldCode())
-            .largeField(field.getLargeField())
             .middleField(field.getMiddleField())
             .smallField(field.getSmallField())
             .detailField(field.getDetailField())
