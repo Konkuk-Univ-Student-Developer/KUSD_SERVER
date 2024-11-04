@@ -5,12 +5,12 @@ import lombok.Builder;
 
 @Builder
 public record MiddleFieldGetResponse(
-    String fieldCode,
+    String middleFieldCode,
     String middleField
 ) {
     public static MiddleFieldGetResponse from(Field field) {
         return MiddleFieldGetResponse.builder()
-            .fieldCode(field.getFieldCode())
+            .middleFieldCode(field.getFieldCode())
             .middleField(field.getMiddleField())
             .build();
     }
