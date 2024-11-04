@@ -5,14 +5,14 @@ import lombok.Builder;
 
 @Builder
 public record DetailFieldGetResponse(
-    String fieldCode,
+    String detailFieldCode,
     String middleField,
     String smallField,
     String detailField
 ) {
     public static DetailFieldGetResponse from(Field field) {
         return DetailFieldGetResponse.builder()
-            .fieldCode(field.getFieldCode())
+            .detailFieldCode(field.getFieldCode())
             .middleField(field.getMiddleField())
             .smallField(field.getSmallField())
             .detailField(field.getDetailField())
