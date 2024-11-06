@@ -44,14 +44,4 @@ public class Field {
     public boolean hasDetailField() {
         return detailField != null;
     }
-
-    public String getFieldSearchFormat() {
-        if (middleField == null) return "";
-
-        if (smallField == null) return middleField;
-
-        if (detailField == null) return middleField + " > " + smallField;
-
-        return middleField + " > " + smallField + " > " + detailField;
-    }
 }

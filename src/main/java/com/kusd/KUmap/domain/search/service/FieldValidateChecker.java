@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class FieldValidateService {
+public class FieldValidateChecker {
 
     private final CompetencyFieldRepository competencyFieldRepository;
     private final CourseDetailsRepository courseDetailsRepository;
@@ -21,7 +21,6 @@ public class FieldValidateService {
         if (competencies.isEmpty()) {
             return false;
         }
-
         return hasCourseDetails(competencies);
     }
 

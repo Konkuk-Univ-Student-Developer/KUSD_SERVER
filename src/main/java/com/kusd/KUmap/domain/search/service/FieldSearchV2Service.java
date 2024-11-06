@@ -1,10 +1,12 @@
 package com.kusd.KUmap.domain.search.service;
 
-import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.request.DetailFieldGetRequest;
-import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.request.SmallFieldGetRequest;
+import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.request.DetailFieldGetV2Request;
+import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.request.SmallFieldGetV2Request;
+import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.AllFieldGetResponse;
+import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.AllFieldGetResponses;
 import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.DetailFieldGetResponse;
-import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.MiddleFieldGetResponse;
-import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.SmallFieldGetResponse;
+import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.MiddleFieldGetV2Response;
+import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.SmallFieldGetV2Response;
 import com.kusd.KUmap.domain.search.domain.Field;
 import com.kusd.KUmap.domain.search.repository.FieldSearchV2Repository;
 import java.util.List;
@@ -17,40 +19,44 @@ import org.springframework.stereotype.Service;
 public class FieldSearchV2Service {
 
     private final FieldSearchV2Repository fieldSearchV2Repository;
-    private final FieldValidateService competencyChecker;
+    private final FieldValidateChecker FieldValidateChecker;
 
     @Cacheable("fieldList")
-    public List<String> getAllFieldList() {
-        return fieldSearchV2Repository.findAll().stream()
-                .filter(competencyChecker::validator)
-                .map(Field::getFieldSearchFormat)
-                .filter(field -> !field.isBlank())
-                .toList();
+    public List<AllFieldGetResponse> getAllFieldList() {
+        AllFieldGetResponses allFieldGetResponses = new AllFieldGetResponses();
+        fieldSearchV2Repository.findAllWithNonEmptyDetailField().stream()
+                .filter(FieldValidateChecker::validator)
+                .forEach(allFieldGetResponses::addAllFieldGetResponse);
+        return allFieldGetResponses.getAllFieldGetResponses();
     }
 
     @Cacheable("MiddleFieldList")
-    public List<MiddleFieldGetResponse> getMiddleFieldList() {
-        return fieldSearchV2Repository.findAllMiddleField().stream()
-                .filter(Field::hasMiddleField)
-                .filter(competencyChecker::validator)
-                .map(MiddleFieldGetResponse::from)
+    public List<MiddleFieldGetV2Response> getMiddleFieldList() {
+        //모든 세분류를 가져와서 유효성 검사를 통과한 middleField만 가져온다.
+        return fieldSearchV2Repository.findAllWithNonEmptyDetailField().stream()
+                .filter(FieldValidateChecker::validator)
+                .map(Field::getMiddleField)
+                .distinct()
+                .map(MiddleFieldGetV2Response::from)
                 .toList();
     }
 
     @Cacheable("SmallFieldList")
-    public List<SmallFieldGetResponse> getSmallFieldList(SmallFieldGetRequest request) {
-        return fieldSearchV2Repository.findAllByMiddleField(request.middleField()).stream()
-                .filter(Field::hasSmallField)
-                .filter(competencyChecker::validator)
-                .map(SmallFieldGetResponse::from)
+    public List<SmallFieldGetV2Response> getSmallFieldList(SmallFieldGetV2Request request) {
+        //중분류에 속하는 모든 세분류를 가져와서 유효성 검사를 통과한 중분류 속 소분류만 가져온다.
+        return fieldSearchV2Repository.findAllByMiddleFieldAndNonEmptyDetailField(request.middleField()).stream()
+                .filter(FieldValidateChecker::validator)
+                .map(Field::getSmallField)
+                .distinct()
+                .map(smallField -> SmallFieldGetV2Response.from(request.middleField(), smallField))
                 .toList();
     }
 
     @Cacheable("DetailFieldList")
-    public List<DetailFieldGetResponse> getDetailFieldList(DetailFieldGetRequest request) {
+    public List<DetailFieldGetResponse> getDetailFieldList(DetailFieldGetV2Request request) {
         return fieldSearchV2Repository.findAllByMiddleFieldAndSmallField(request.middleField(), request.smallField()).stream()
                 .filter(Field::hasDetailField)
-                .filter(competencyChecker::validator)
+                .filter(FieldValidateChecker::validator)
                 .map(DetailFieldGetResponse::from)
                 .toList();
     }
