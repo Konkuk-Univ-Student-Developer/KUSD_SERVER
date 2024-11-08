@@ -6,22 +6,24 @@ import lombok.Builder;
 
 @Builder
 public record CourseSubjectGetResponse(
-    String haksuId,
-    String name,
-    Integer openingYear,
-    String openingSemester,
-    String openingSubject
+        String haksuId,
+        String name,
+        Integer openingYear,
+        String openingSemester,
+        String openingSubject,
+        int credit
 ) {
 
     public static CourseSubjectGetResponse from(CourseDetails courseDetails) {
         AddInformation addInformation = courseDetails.getAddInformation();
         return CourseSubjectGetResponse.builder()
-            .haksuId(courseDetails.getHaksuId())
-            .name(courseDetails.getTypicalKoreanName())
-            .openingYear(addInformation.getOpeningSchoolYear())
-            .openingSemester(addInformation.getOpeningSemesterTerm())
-            .openingSubject(courseDetails.getAddInformation().getOpeningSubjectName())
-            .build();
+                .haksuId(courseDetails.getHaksuId())
+                .name(courseDetails.getTypicalKoreanName())
+                .openingYear(addInformation.getOpeningSchoolYear())
+                .openingSemester(addInformation.getOpeningSemesterTerm())
+                .openingSubject(courseDetails.getAddInformation().getOpeningSubjectName())
+                .credit(courseDetails.getPoint())
+                .build();
     }
 
 }

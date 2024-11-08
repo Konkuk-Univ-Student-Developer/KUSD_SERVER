@@ -10,6 +10,7 @@ public record CourseGetResponse(
         String name,
         Integer openingYear,
         String openingSemester,
+        String openingSubject,
         int credit
 ) {
 
@@ -21,6 +22,7 @@ public record CourseGetResponse(
                 .name(courseDetails.getTypicalKoreanName())
                 .openingYear(addInformation.getOpeningSchoolYear())
                 .openingSemester(addInformation.getOpeningSemesterTerm())
+                .openingSubject(courseDetails.getAddInformation().getOpeningSubjectName())
                 .credit(courseDetails.getPoint())
                 .build();
     }
