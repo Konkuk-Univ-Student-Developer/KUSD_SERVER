@@ -1,5 +1,6 @@
 package com.kusd.KUmap.domain.search.service;
 
+import com.kusd.KUmap.domain.search.domain.Field_V1;
 import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.request.DetailFieldGetV2Request;
 import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.request.SmallFieldGetV2Request;
 import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.AllFieldGetResponse;
@@ -7,7 +8,6 @@ import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.AllFieldGetRespo
 import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.DetailFieldGetResponse;
 import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.MiddleFieldGetV2Response;
 import com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response.SmallFieldGetV2Response;
-import com.kusd.KUmap.domain.search.domain.Field;
 import com.kusd.KUmap.domain.search.repository.FieldSearchV2Repository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class FieldSearchV2Service {
         //모든 세분류를 가져와서 유효성 검사를 통과한 middleField만 가져온다.
         return fieldSearchV2Repository.findAllWithNonEmptyDetailField().stream()
                 .filter(FieldValidateChecker::validator)
-                .map(Field::getMiddleField)
+                .map(Field_V1::getMiddleField)
                 .distinct()
                 .map(MiddleFieldGetV2Response::from)
                 .toList();
@@ -46,7 +46,7 @@ public class FieldSearchV2Service {
         //중분류에 속하는 모든 세분류를 가져와서 유효성 검사를 통과한 중분류 속 소분류만 가져온다.
         return fieldSearchV2Repository.findAllByMiddleFieldAndNonEmptyDetailField(request.middleField()).stream()
                 .filter(FieldValidateChecker::validator)
-                .map(Field::getSmallField)
+                .map(Field_V1::getSmallField)
                 .distinct()
                 .map(smallField -> SmallFieldGetV2Response.from(request.middleField(), smallField))
                 .toList();
@@ -55,7 +55,7 @@ public class FieldSearchV2Service {
     @Cacheable("DetailFieldList")
     public List<DetailFieldGetResponse> getDetailFieldList(DetailFieldGetV2Request request) {
         return fieldSearchV2Repository.findAllByMiddleFieldAndSmallField(request.middleField(), request.smallField()).stream()
-                .filter(Field::hasDetailField)
+                .filter(Field_V1::hasDetailField)
                 .filter(FieldValidateChecker::validator)
                 .map(DetailFieldGetResponse::from)
                 .toList();

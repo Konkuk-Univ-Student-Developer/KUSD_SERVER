@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
-@Table(name = "field")
+@Table(name = "field_v1")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Field {
+public class Field_V1 {
 
     @Id
     @Column(name = "FIELD_CD")
@@ -32,14 +32,6 @@ public class Field {
 
     @Column(name = "DETAILFIELD")
     private String detailField;
-
-    public boolean hasMiddleField() {
-        return middleField != null;
-    }
-
-    public boolean hasSmallField() {
-        return smallField != null;
-    }
 
     public boolean hasDetailField() {
         return detailField != null;

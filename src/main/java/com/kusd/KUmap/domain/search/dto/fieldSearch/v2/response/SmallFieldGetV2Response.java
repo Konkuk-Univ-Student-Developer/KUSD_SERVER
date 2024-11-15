@@ -1,6 +1,5 @@
 package com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response;
 
-import com.kusd.KUmap.domain.search.domain.Field;
 import lombok.Builder;
 
 @Builder

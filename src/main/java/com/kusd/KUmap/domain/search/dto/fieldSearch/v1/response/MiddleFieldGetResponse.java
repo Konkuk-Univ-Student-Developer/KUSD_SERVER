@@ -1,6 +1,6 @@
 package com.kusd.KUmap.domain.search.dto.fieldSearch.v1.response;
 
-import com.kusd.KUmap.domain.search.domain.Field;
+import com.kusd.KUmap.domain.search.domain.Field_V1;
 import lombok.Builder;
 
 @Deprecated
@@ -9,10 +9,10 @@ public record MiddleFieldGetResponse(
     String fieldCode,
     String middleField
 ) {
-    public static MiddleFieldGetResponse from(Field field) {
+    public static MiddleFieldGetResponse from(Field_V1 fieldV1) {
         return MiddleFieldGetResponse.builder()
-            .fieldCode(field.getFieldCode())
-            .middleField(field.getMiddleField())
+            .fieldCode(fieldV1.getFieldCode())
+            .middleField(fieldV1.getMiddleField())
             .build();
     }
 }

@@ -93,17 +93,17 @@
       let ul = document.getElementById("fieldList");
       ul.innerHTML = ""; // 기존 리스트를 초기화
 
-      let filteredFields = fields.filter(field => field.toLowerCase().includes(input));
+      let filteredFields = fields.filter(fieldV1 => fieldV1.toLowerCase().includes(input));
 
       if (filteredFields.length === 0) {
           document.getElementById("noResult").style.display = "block"; // 결과가 없을 경우 메시지 표시
       } else {
           document.getElementById("noResult").style.display = "none";
-          filteredFields.forEach(field => {
+          filteredFields.forEach(fieldV1 => {
               let li = document.createElement("li");
 
               // 검색어와 일치하는 부분을 하이라이트하는 함수 호출
-              li.innerHTML = highlightText(field, input);
+              li.innerHTML = highlightText(fieldV1, input);
               ul.appendChild(li);
           });
       }

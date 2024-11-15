@@ -4,7 +4,7 @@ import com.kusd.KUmap.domain.competency.entity.Competency;
 import com.kusd.KUmap.domain.competency.entity.CompetencyField;
 import com.kusd.KUmap.domain.competency.repository.CompetencyFieldRepository;
 import com.kusd.KUmap.domain.competency.repository.CompetencyRepository;
-import com.kusd.KUmap.domain.search.domain.Field;
+import com.kusd.KUmap.domain.search.domain.Field_V1;
 import com.kusd.KUmap.domain.search.repository.FieldSearchV2Repository;
 import com.kusd.KUmap.global.error.exception.ErrorCode;
 import com.kusd.KUmap.global.error.exception.NotFoundException;
@@ -22,9 +22,9 @@ public class CompetencyService {
     private final CompetencyRepository competencyRepository;
 
     public List<Competency> getCompetencyListByFieldCode(String fieldCode) {
-        Field field = findFieldByFieldCode(fieldCode);
+        Field_V1 fieldV1 = findFieldByFieldCode(fieldCode);
 
-        List<CompetencyField> competencyFieldList = competencyFieldRepository.findAllByField(field);
+        List<CompetencyField> competencyFieldList = competencyFieldRepository.findAllByField(fieldV1);
 
         return competencyFieldList.stream()
             .map(CompetencyField::getCompetency)
@@ -35,7 +35,7 @@ public class CompetencyService {
         return competencyRepository.findByCompetencyCode(cmptCode);
     }
 
-    private Field findFieldByFieldCode(String fieldCode) {
+    private Field_V1 findFieldByFieldCode(String fieldCode) {
         return fieldSearchV2Repository.findByFieldCode(fieldCode)
             .orElseThrow(() -> new NotFoundException(ErrorCode.FIELD_NOT_FOUND));
     }
