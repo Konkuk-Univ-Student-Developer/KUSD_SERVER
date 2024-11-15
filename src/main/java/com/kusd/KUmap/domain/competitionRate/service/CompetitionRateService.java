@@ -3,6 +3,8 @@ package com.kusd.KUmap.domain.competitionRate.service;
 import com.kusd.KUmap.domain.competitionRate.domain.CompetitionRate;
 import com.kusd.KUmap.domain.competitionRate.dto.response.CompetitionRateResponse;
 import com.kusd.KUmap.domain.competitionRate.repository.CompetitionRateRepository;
+import com.kusd.KUmap.global.error.exception.ErrorCode;
+import com.kusd.KUmap.global.error.exception.NotFoundException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -18,7 +20,11 @@ public class CompetitionRateService {
     private final CompetitionRateRepository competitionRateRepository;
 
     public CompetitionRateResponse getCompetitionRate(String haksuId) {
+
         List<CompetitionRate> competitionRates = competitionRateRepository.findByHaksuId(haksuId);
+        if(competitionRates.isEmpty()) {
+            throw new NotFoundException(ErrorCode.NOT_FOUND_COMPETITION_RATE);
+        }
         int totalApplicationNumber = getTotalApplicationNumber(competitionRates);
         Map<String, Double> averageTotalCompetitionRate = calculateAverageCompetitionRate(competitionRates);
 

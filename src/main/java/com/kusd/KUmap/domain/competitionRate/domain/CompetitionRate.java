@@ -2,6 +2,8 @@ package com.kusd.KUmap.domain.competitionRate.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +14,15 @@ import lombok.NoArgsConstructor;
 public class CompetitionRate {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "competition_rate_id")
-    private String id;
+    private Long id;
 
     private String haksuId;
+
+    private String courseNum;
+
+    private String openSemester;
 
     private String year;
 
@@ -49,15 +56,17 @@ public class CompetitionRate {
     private int seniorCourseBasketNumber;
     private double seniorCompetitionRate;
 
-    public CompetitionRate(String id, String haksuId, String year, String professor, String lectureTime,
-                           String totalApplicationNumber, String undergraduateNumber, String postgraduateNumber,
-                           int totalNumber, int totalCourseBasketNumber, double totalCompetitionRate,
-                           int freshmanTotalNumber, int freshmanCourseBasketNumber, double freshmanCompetitionRate,
-                           int sophomoreTotalNumber, int sophomoreCourseBasketNumber, double sophomoreCompetitionRate,
-                           int juniorTotalNumber, int juniorCourseBasketNumber, double juniorCompetitionRate,
-                           int seniorTotalNumber, int seniorCourseBasketNumber, double seniorCompetitionRate) {
-        this.id = id;
+    public CompetitionRate(String haksuId, String courseNum, String openSemester, String year, String professor,
+                           String lectureTime, String totalApplicationNumber, String undergraduateNumber,
+                           String postgraduateNumber, int totalNumber, int totalCourseBasketNumber,
+                           double totalCompetitionRate, int freshmanTotalNumber, int freshmanCourseBasketNumber,
+                           double freshmanCompetitionRate, int sophomoreTotalNumber, int sophomoreCourseBasketNumber,
+                           double sophomoreCompetitionRate, int juniorTotalNumber, int juniorCourseBasketNumber,
+                           double juniorCompetitionRate, int seniorTotalNumber, int seniorCourseBasketNumber,
+                           double seniorCompetitionRate) {
         this.haksuId = haksuId;
+        this.courseNum = courseNum;
+        this.openSemester = openSemester;
         this.year = year;
         this.professor = professor;
         this.lectureTime = lectureTime;

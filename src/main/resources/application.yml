@@ -22,5 +22,5 @@ sentry:
   exception-resolver-order: -2147483647
   tracesSampleRate: 1.0
   environment: production  # 또는 개발 환경에 맞는 이름으로 설정
-  debug: true             # 필요시 true로 설정하여 디버그 로그 확인
+  debug: false             # 필요시 true로 설정하여 디버그 로그 확인
 
