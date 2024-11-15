@@ -9,11 +9,18 @@ spring:
   web:
     resources:
       add-mappings: false
+  cache:
+    type: simple
 
 logging:
   level:
     root: INFO  # 모든 로그에 대한 기본 로그 레벨 설정
     org.springframework.security: TRACE
 
-
+sentry:
+  dsn: ${SENTRY_DSN}
+  exception-resolver-order: -2147483647
+  tracesSampleRate: 1.0
+  environment: production  # 또는 개발 환경에 맞는 이름으로 설정
+  debug: true             # 필요시 true로 설정하여 디버그 로그 확인
 
