@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @Entity
+@Deprecated
 @Table(name = "field_v1")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Field_V1 {

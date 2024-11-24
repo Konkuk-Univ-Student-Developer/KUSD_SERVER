@@ -1,6 +1,7 @@
 package com.kusd.KUmap.domain.competency.entity;
 
 import com.kusd.KUmap.domain.search.domain.Field_V1;
+import com.kusd.KUmap.domain.search.domain.Field_V2;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -26,7 +27,7 @@ public class CompetencyField {
 
     @ManyToOne
     @JoinColumn(name = "FIELD_CD")
-    private Field_V1 field;
+    private Field_V2 field;
 
     @Column(name = "LT_YY")
     private String learningTermYear;
