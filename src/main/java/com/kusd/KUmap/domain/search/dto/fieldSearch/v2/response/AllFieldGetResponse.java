@@ -1,12 +1,11 @@
 package com.kusd.KUmap.domain.search.dto.fieldSearch.v2.response;
 
-import com.kusd.KUmap.domain.search.domain.Field_V1;
 import com.kusd.KUmap.domain.search.domain.Field_V2;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public record AllFieldGetResponse(
         String middleField,
-        String middelFieldCode,
+        String middleFieldCode,
         String smallField,
         String smallFieldCode,
         String detailField,
