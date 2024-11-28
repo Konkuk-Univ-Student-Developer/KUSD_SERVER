@@ -10,6 +10,8 @@ import com.kusd.KUmap.domain.course.dto.response.CourseSubjectGetResponse;
 import com.kusd.KUmap.domain.course.entity.CompetencyInCourse;
 import com.kusd.KUmap.domain.course.entity.CourseDetails;
 import com.kusd.KUmap.domain.course.repository.CourseDetailsRepository;
+import com.kusd.KUmap.domain.search.domain.Field_V2;
+import com.kusd.KUmap.domain.search.repository.FieldV2SearchRepository;
 import com.kusd.KUmap.global.error.exception.ErrorCode;
 import com.kusd.KUmap.global.error.exception.NotFoundException;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class CourseDetailService {
 
     private final CourseDetailsRepository courseDetailsRepository;
     private final CompetencyService competencyService;
+    private final FieldV2SearchRepository fieldV2SearchRepository;
 
     public List<CourseDetails> getCourseListByCompetencyCode(String cmptCode) {
         return courseDetailsRepository.findAllByCompetencyCode(cmptCode);
@@ -71,7 +74,7 @@ public class CourseDetailService {
     public List<CourseCompetencyResponse> getCourseListBySubjectAndField(String subjectCode, String fieldCode) {
 
         // 진출분야의 전공역량
-        List<Competency> competencyListByField = competencyService.getCompetencyListByFieldCode(fieldCode);
+        List<Competency> competencyListByField = getCompetencies(fieldCode);
 
         // 학과의 전공역량
         Set<String> competencyNameListBySubject = extractCompetencyNamesFromCourses(subjectCode);
@@ -84,6 +87,21 @@ public class CourseDetailService {
 
         // 응답 생성
         return createResponseList(resultMap);
+    }
+
+    private List<Competency> getCompetencies(String fieldCode) {
+        if(fieldCode.substring(6,8).equals("00")){
+            List<Competency> competencies = new ArrayList<>(
+                    fieldV2SearchRepository.findAllByParentFieldCode(fieldCode).stream()
+                            .map(Field_V2::getFieldCode)
+                            .map(competencyService::getCompetencyListByFieldCode)
+                            .flatMap(List::stream)
+                            .toList());
+            competencies.addAll(competencyService.getCompetencyListByFieldCode(fieldCode));
+
+            return competencies;
+        }
+        return competencyService.getCompetencyListByFieldCode(fieldCode);
     }
 
     private Set<String> extractCompetencyNamesFromCourses(String subjectCode) {
