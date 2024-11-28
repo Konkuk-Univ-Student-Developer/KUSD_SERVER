@@ -14,7 +14,7 @@ public record DetailFieldGetResponse(
 ) {
     public static DetailFieldGetResponse from(DetailFieldGetV2Request request, Field_V2 fieldV2) {
         String fieldName = fieldV2.getName();
-        if (request.smallField().equals(fieldV2.getName())) {
+        if (request.smallFieldCode().equals(fieldV2.getFieldCode())) {
             fieldName = "공통";
         }
         return DetailFieldGetResponse.builder()
