@@ -20,7 +20,7 @@ public class CompetitionRateController {
 
     @GetMapping("/{haksuId}")
     @Operation(summary = "학수 번호로 경쟁률 조회")
-    public ResponseEntity<CompetitionRateResponse> getCompetitionRate(
+    public ResponseEntity<List<CompetitionRateResponse>> getCompetitionRate(
             @PathVariable("haksuId") String haksuId
     ) {
         return ResponseEntity.ok(competitionRateService.getCompetitionRate(haksuId));

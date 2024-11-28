@@ -5,6 +5,7 @@ import com.kusd.KUmap.domain.competitionRate.dto.response.CompetitionRateRespons
 import com.kusd.KUmap.domain.competitionRate.repository.CompetitionRateRepository;
 import com.kusd.KUmap.global.error.exception.ErrorCode;
 import com.kusd.KUmap.global.error.exception.NotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -19,17 +20,38 @@ public class CompetitionRateService {
 
     private final CompetitionRateRepository competitionRateRepository;
 
-    public CompetitionRateResponse getCompetitionRate(String haksuId) {
+    public List<CompetitionRateResponse> getCompetitionRate(String haksuId) {
 
         List<CompetitionRate> competitionRates = competitionRateRepository.findByHaksuId(haksuId);
         if(competitionRates.isEmpty()) {
             throw new NotFoundException(ErrorCode.NOT_FOUND_COMPETITION_RATE);
         }
+
+        List<CompetitionRate> firstSemesterCompetitions = competitionRates.stream()
+                .filter(competitionRate -> competitionRate.getOpenSemester().equals("1학기"))
+                .toList();
+
+        List<CompetitionRate> secondSemesterCompetitions = competitionRates.stream()
+                .filter(competitionRate -> competitionRate.getOpenSemester().equals("2학기"))
+                .toList();
+
+        List<CompetitionRateResponse> result = new ArrayList<>();
+        if(!firstSemesterCompetitions.isEmpty())
+            result.add(getCompetitionRateResponse(firstSemesterCompetitions));
+        if(!secondSemesterCompetitions.isEmpty())
+            result.add(getCompetitionRateResponse(secondSemesterCompetitions));
+
+        return result;
+    }
+
+    private CompetitionRateResponse getCompetitionRateResponse(List<CompetitionRate> competitionRates) {
         int totalApplicationNumber = getTotalApplicationNumber(competitionRates);
         Map<String, Double> averageTotalCompetitionRate = calculateAverageCompetitionRate(competitionRates);
 
-        return  CompetitionRateResponse.from(competitionRates.get(0), totalApplicationNumber, averageTotalCompetitionRate);
+        return CompetitionRateResponse.from(competitionRates.get(0), totalApplicationNumber,
+                averageTotalCompetitionRate);
     }
+
 
     private static int getTotalApplicationNumber(List<CompetitionRate> competitionRates) {
         return competitionRates.stream()

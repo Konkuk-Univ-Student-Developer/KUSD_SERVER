@@ -8,6 +8,7 @@ public record CompetitionRateResponse(
     String year,
     @Schema(example = "BBAB54724")
     String haksuId,
+    String openingSemester,
     int totalApplicationNumber,
     Map<String, Double> competitionRates
 ) {
@@ -16,6 +17,7 @@ public record CompetitionRateResponse(
         return new CompetitionRateResponse(
                 entity.getYear(),
                 entity.getHaksuId(),
+                entity.getOpenSemester(),
                 totalApplicationNumber,
                 competitionRates
         );
