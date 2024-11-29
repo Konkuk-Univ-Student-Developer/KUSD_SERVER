@@ -43,7 +43,7 @@ public class FieldV2SearchService implements FieldSearchService {
                 continue;
             validateDetailFields.add(Field_V2.builder()
                     .fieldCode(smallField.getFieldCode())
-                    .name("공통")
+                    .name("전체")
                     .categoryDepth(DETAIL_FIELD_DEPTH)
                     .parentFieldCode(smallField.getFieldCode())
                     .build());
