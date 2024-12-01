@@ -42,7 +42,7 @@ public class AddInformation {
     private Integer moocFlag;
 
     @Column(name = "dream_shtm_fg")
-    private boolean dreamSemesterFlag;
+    private Boolean dreamSemesterFlag;
 
     @Column(name = "SELC_FG")
     private Integer selectiveFlag;
