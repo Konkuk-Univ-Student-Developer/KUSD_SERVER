@@ -28,7 +28,7 @@ public record AddInformationGetResponse(
             addInformation.getPrerequisitesApplication(),
             addInformation.getEngineeringCertificationFlagCode(),
             addInformation.getMoocFlag(),
-            addInformation.isDreamSemesterFlag(),
+            addInformation.getDreamSemesterFlag(),
             addInformation.getSelectiveFlag()
         );
     }
