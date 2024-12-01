@@ -16,7 +16,7 @@ public class CourseCompetencySubjectResponse {
     public static CourseCompetencySubjectResponse from(Competency competency) {
         return CourseCompetencySubjectResponse.builder()
             .competencyCode(competency.getCompetencyCode())
-            .competencyName(competency.getSubjectMajorCode())
+            .competencyName(competency.getCompetencyName())
             .competencyDescription(competency.getRemarks())
             .build();
     }
